@@ -57,6 +57,7 @@ class WPRD_Plugin
      */
     private function includes()
     {
+        require_once WPRD_PATH . 'includes/class-database-installer.php';
         require_once WPRD_PATH . 'includes/class-storage.php';
         require_once WPRD_PATH . 'includes/class-metrics-collector.php';
         require_once WPRD_PATH . 'includes/class-baseline-manager.php';
@@ -92,3 +93,33 @@ function wprd_init()
     WPRD_Plugin::get_instance();
 }
 add_action('plugins_loaded', 'wprd_init');
+
+/**
+ * Activation hook.
+ */
+function wprd_activate()
+{
+    require_once WPRD_PATH . 'includes/class-database-installer.php';
+    WPRD_Database_Installer::install();
+}
+register_activation_hook(__FILE__, 'wprd_activate');
+
+/**
+ * Deactivation hook.
+ */
+function wprd_deactivate()
+{
+    // Deactivation cleanup can go here
+}
+register_deactivation_hook(__FILE__, 'wprd_deactivate');
+
+/**
+ * Uninstall hook.
+ */
+function wprd_uninstall()
+{
+    require_once WPRD_PATH . 'includes/class-database-installer.php';
+    WPRD_Database_Installer::uninstall();
+}
+register_uninstall_hook(__FILE__, 'wprd_uninstall');
+
